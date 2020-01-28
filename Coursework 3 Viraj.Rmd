@@ -1,0 +1,95 @@
+---
+title: "Coursework 3 Viraj"
+author: "Registration Number 1901181"
+date: "12/3/2019"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r echo = FALSE,include=FALSE}
+#Attaching essential packages
+library(kableExtra)
+library(knitr)
+library(readr)
+library(plotly)
+#Importing Data set
+X2015 <- read_csv("2015.csv")
+#Changing Data type
+happy_2015 <- as.data.frame(X2015)
+#Viewing column names
+names(happy_2015)
+#Changing column names
+names(happy_2015) <- c("country", "region", "happiness_rank", "happiness_score", "std_error", "gdp_per_cpt", "family", "life_exp", "freedom", "trust_corruption", "generosity", "dystopia_residual")
+
+kable(head(happy_2015[, c("country", "region", "happiness_rank", "happiness_score")]))%>%
+  kable_styling(bootstrap_options = c("striped", "hover"), font_size = 10)
+
+#Viewing stats about each attribute
+summary(happy_2015)
+
+#structure
+str(happy_2015)
+
+#library for the summary table
+library(fBasics) 
+library(kableExtra)
+
+
+#subsetting the dataset to only include numeric values
+num_hap <- happy_2015[, c("happiness_rank", "happiness_score", "std_error", "gdp_per_cpt", "family", "life_exp", "freedom", "trust_corruption", "generosity", "dystopia_residual")]
+
+#subsetting the summary table to view only stats below
+summary <- basicStats(num_hap)[c("Mean", "Stdev", "Median", "Minimum", "Maximum"),]
+#styling the summary table
+kable(summary)%>%
+ kable_styling(bootstrap_options = c("striped", "hover"), font_size = 10)
+
+library(kableExtra)
+kable(head(happy_2015, 10)) %>%
+kable_styling(bootstrap_options = c("striped", "hover"))
+
+library(kableExtra)
+kable(tail(happy_2015, 10)) %>%
+kable_styling(bootstrap_options = c("striped", "hover"))
+
+library(scales)
+box <- ggplot(happy_2015, aes(x = region, y = happiness_score, color = region)) +
+  geom_boxplot() + 
+  geom_jitter(aes(color=country), size = 0.5) +
+  ggtitle("Happiness Score for Regions and Countries") + 
+  coord_flip() + 
+  theme(legend.position="none")
+ggplotly(box)
+
+library(corrplot)
+m <- cor(num_hap) #creating correlation matrix
+corrplot(m, method="circle", type='upper', tl.cex=0.8, tl.col = 'black')
+
+#cormat<-rquery.cormat(num_hap, graphType="heatmap")
+corrplot(m, method="square", type='full', tl.cex=0.8, tl.col = 'black')
+
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
